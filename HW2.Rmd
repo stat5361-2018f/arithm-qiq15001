@@ -1,0 +1,22 @@
+---
+title: "HW2"
+author: "Qi Qi"
+date: "9/10/2018"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+## Exercise1 Approximation of distribution function of standard normal
+
+### 1.1 Abstract
+
+## Exercise2 
+*.Machine$double.xmax* is the largest normalized floating-point number. Normally, it is 1.797693e+308.
+
+*.Machine$double.xmin* is the smallest non-zero normalized floating-point number. Normally, it is 2.225074e-308.
+
+*.Machine$double.eps* is the smallest positive floating-point number x such that $1 + x != 1$. Normally, it is 2.220446e-16.
+
+*.Machine$double.neg.eps* is a small positive floating-point number x such that $1 - x != 1$. Normally, it is 1.110223e-16.
