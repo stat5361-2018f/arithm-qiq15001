@@ -11,14 +11,24 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Exercise1 Approximation of distribution function of standard normal
 
 ### 1.1 Abstract
-Monte Carlo methods will be used to approximate the distribution function of standard normal. Boxplot of bias will also be plotted. 
+Monte Carlo methods have been used to approximate the distribution function of standard normal. Box plots of bias are also plotted. 
 
 
 ### 1.2 Method
+The distribution function of $N(0,1)$ is
+
+$$ \Phi(t)=\int_{-\infty}^t\frac{1}{\sqrt{2\pi}}e^{-y^2/2}dy$$
+
+I compute the true values at $t\in\{0.0, 0.67, 0.84, 1.28, 1.65, 2.32, 2.58, 3.09, 3.72\}$.
+
+To calculate the approximated values, I generate random samples with sample size $n\in\{10^2, 10^3, 10^4\}$ and evaluate the approximation at all values of $t$ by Monte Carlo method:
+
+$$\hat{\Phi}(t)=\frac{1}{n}\sum_{i=1}^{n}I(X_i\leq t)$$
 
 
 
-### 1.3 Comparison of true values and approximation
+### 1.3 Comparison of true values and approximations
+I use ```pnorm``` function to calculate the true values of distribution function at all the values of $t$ and then compute the approximations by Monte Carlo method described previously. Table 1 is generated and contains $t$, true values and approximations at different sample size n.
 ```{r echo=FALSE}
 t=c(0.0, 0.67, 0.84, 1.28, 1.65, 2.32, 2.58, 3.09, 3.72)
 true_value<- pnorm(t, 0, 1)
