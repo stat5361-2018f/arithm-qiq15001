@@ -8,13 +8,14 @@ output: pdf_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-## Exercise1 Approximation of distribution function of standard normal
+# Exercise 1 
+\section{Approximation of distribution function of standard normal}
 
-### 1.1 Abstract
+\subsection{Abstract}
 Monte Carlo methods have been used to approximate the distribution function of standard normal. Box plots of bias are also established. After the comparison, I conclude that when sample size is enlarged, the approximations will get close to the true values.
 
 
-### 1.2 Method
+\subsection{Method}
 The distribution function of $N(0,1)$ is
 
 $$ \Phi(t)=\int_{-\infty}^t\frac{1}{\sqrt{2\pi}}e^{-y^2/2}dy$$
@@ -27,9 +28,9 @@ $$\hat{\Phi}(t)=\frac{1}{n}\sum_{i=1}^{n}I(X_i\leq t)$$
 
 
 
-### 1.3 Comparison of true values and approximations
+\subsection{Comparison of true values and approximations}
 I use ```pnorm``` function to calculate the true values of distribution function at all the values of $t$ and then compute the approximations by Monte Carlo method described previously. Table 1 is generated and contains $t$, true values and approximations at different sample size n.
-```{r echo=FALSE}
+```{r}
 t<- c(0.0, 0.67, 0.84, 1.28, 1.65, 2.32, 2.58, 3.09, 3.72)
 true_value<- pnorm(t, 0, 1)
 apprx1<- NA
@@ -59,7 +60,7 @@ knitr::kable(tab, col.names = c("t", "True value", "Approx at n=10^2", "Approx a
 
 Further, I repeat the experiment 100 times and create box plots of bias at all $t$ (Figure 1).
 
-```{r echo=FALSE}
+```{r}
 library(ggplot2)
 bias1<- NA
 bias2<- NA
@@ -87,10 +88,10 @@ ggplot(stack(bias_all), aes(x = ind, y = values))+
 ```
 
 
-### 1.4 Conclusion
+\subsection{Conclusion}
 According to Table 1, we can notice that when $n=10^4$ the approximations are most close to the true values. After repeating experiment 100 times, we can state the bias are more close to 0 with larger $n$ from Figue 1. Thus, this indicate that enlarging sample size will reduce the error of approximation. 
 
-## Exercise2 
+# Exercise 2
 ```.Machine$double.xmax``` is the largest normalized floating-point number. Normally, it is $1.797693e+308$.
 
 ``` .Machine$double.xmin``` is the smallest non-zero normalized floating-point number. Normally, it is $2.225074e-308$.
