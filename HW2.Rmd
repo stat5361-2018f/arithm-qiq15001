@@ -1,7 +1,7 @@
 ---
 title: "HW2"
 author: "Qi Qi"
-date: "9/10/2018"
+date: "9/14/2018"
 output: pdf_document
 ---
 
@@ -11,6 +11,42 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Exercise1 Approximation of distribution function of standard normal
 
 ### 1.1 Abstract
+Monte Carlo methods will be used to approximate the distribution function of standard normal. Boxplot of bias will also be plotted. 
+
+
+### 1.2 Method
+
+
+
+### 1.3 Comparison of true values and approximation
+```{r echo=FALSE}
+t=c(0.0, 0.67, 0.84, 1.28, 1.65, 2.32, 2.58, 3.09, 3.72)
+true_value<- pnorm(t, 0, 1)
+apprx1<- NA
+apprx2<- NA
+apprx3<- NA
+# n=10^2
+x=rnorm(100, 0, 1)
+for (i in 1:length(t)){
+  apprx1[i]<- sum(x<=t[i])/100
+}
+
+# n=10^3
+x=rnorm(1000, 0, 1)
+for (i in 1:length(t)){
+  apprx2[i]<- sum(x<=t[i])/1000
+}
+
+# n=10^4
+x=rnorm(10000, 0, 1)
+for (i in 1:length(t)){
+  apprx3[i]<- sum(x<=t[i])/10000
+}
+
+tab<- cbind(t, true_value, apprx1, apprx2, apprx3)
+knitr::kable(tab, col.names = c("t", "True value", "Approx at n=10^2", "Approx at n=10^3", "Approx at n=10^4"), caption = "Comparison of true values and approximation")
+```
+
 
 ## Exercise2 
 ```.Machine$double.xmax``` is the largest normalized floating-point number. Normally, it is 1.797693e+308.
