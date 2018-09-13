@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Exercise1 Approximation of distribution function of standard normal
 
 ### 1.1 Abstract
-Monte Carlo methods have been used to approximate the distribution function of standard normal. Box plots of bias are also plotted. 
+Monte Carlo methods have been used to approximate the distribution function of standard normal. Box plots of bias are also established. After the comparison, I conclude that when sample size is enlarged, the approximations will get close to the true values.
 
 
 ### 1.2 Method
@@ -30,39 +30,71 @@ $$\hat{\Phi}(t)=\frac{1}{n}\sum_{i=1}^{n}I(X_i\leq t)$$
 ### 1.3 Comparison of true values and approximations
 I use ```pnorm``` function to calculate the true values of distribution function at all the values of $t$ and then compute the approximations by Monte Carlo method described previously. Table 1 is generated and contains $t$, true values and approximations at different sample size n.
 ```{r echo=FALSE}
-t=c(0.0, 0.67, 0.84, 1.28, 1.65, 2.32, 2.58, 3.09, 3.72)
+t<- c(0.0, 0.67, 0.84, 1.28, 1.65, 2.32, 2.58, 3.09, 3.72)
 true_value<- pnorm(t, 0, 1)
 apprx1<- NA
 apprx2<- NA
 apprx3<- NA
 # n=10^2
-x=rnorm(100, 0, 1)
+x<- rnorm(100, 0, 1)
 for (i in 1:length(t)){
   apprx1[i]<- sum(x<=t[i])/100
 }
 
 # n=10^3
-x=rnorm(1000, 0, 1)
+y<- rnorm(1000, 0, 1)
 for (i in 1:length(t)){
-  apprx2[i]<- sum(x<=t[i])/1000
+  apprx2[i]<- sum(y<=t[i])/1000
 }
 
 # n=10^4
-x=rnorm(10000, 0, 1)
+z<- rnorm(10000, 0, 1)
 for (i in 1:length(t)){
-  apprx3[i]<- sum(x<=t[i])/10000
+  apprx3[i]<- sum(z<=t[i])/10000
 }
 
 tab<- cbind(t, true_value, apprx1, apprx2, apprx3)
 knitr::kable(tab, col.names = c("t", "True value", "Approx at n=10^2", "Approx at n=10^3", "Approx at n=10^4"), caption = "Comparison of true values and approximation")
 ```
 
+Further, I repeat the experiment 100 times and create box plots of bias at all $t$ (Figure 1).
+
+```{r echo=FALSE}
+library(ggplot2)
+bias1<- NA
+bias2<- NA
+bias3<- NA
+bias_all<- NA
+for (j in 1:100){
+  for (i in 1:length(t)){
+     x<- rnorm(100, 0, 1)
+     bias1[i]<- sum(x<=t[i])/100- true_value[i]
+     y<- rnorm(1000, 0, 1)
+     bias2[i]<- sum(y<=t[i])/1000- true_value[i]
+     z<- rnorm(10000, 0, 1)
+     bias3[i]<- sum(z<=t[i])/10000- true_value[i]
+  }
+  bias<-cbind(bias1, bias2, bias3)
+  bias_all<-rbind(bias_all, bias)
+}
+bias_all<- as.data.frame(na.omit(bias_all))
+ggplot(stack(bias_all), aes(x = ind, y = values))+
+  geom_boxplot()+
+  scale_x_discrete(labels=c("n=10^2", "n=10^3", "n=10^4"), name="sample size")+
+  scale_y_continuous(name="bias")+
+  ggtitle("Figure 1: bias at all t")+
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+
+### 1.4 Conclusion
+According to Table 1, we can notice that when $n=10^4$ the approximations are most close to the true values. After repeating experiment 100 times, we can state the bias are more close to 0 with larger $n$ from Figue 1. Thus, this indicate that enlarging sample size will reduce the error of approximation. 
 
 ## Exercise2 
-```.Machine$double.xmax``` is the largest normalized floating-point number. Normally, it is 1.797693e+308.
+```.Machine$double.xmax``` is the largest normalized floating-point number. Normally, it is $1.797693e+308$.
 
-``` .Machine$double.xmin```is the smallest non-zero normalized floating-point number. Normally, it is $2.225074e-308$.
+``` .Machine$double.xmin``` is the smallest non-zero normalized floating-point number. Normally, it is $2.225074e-308$.
 
-```.Machine$double.eps``` is the smallest positive floating-point number x such that $1 + x != 1$. Normally, it is 2.220446e-16.
+```.Machine$double.eps``` is the smallest positive floating-point number x such that $1 + x != 1$. Normally, it is $2.220446e-16$.
 
-```.Machine$double.neg.eps``` is a small positive floating-point number x such that $1 - x != 1$. Normally, it is 1.110223e-16.
+```.Machine$double.neg.eps``` is a small positive floating-point number x such that $1 - x != 1$. Normally, it is $1.110223e-16$.
