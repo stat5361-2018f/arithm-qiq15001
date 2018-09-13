@@ -29,7 +29,7 @@ $$\hat{\Phi}(t)=\frac{1}{n}\sum_{i=1}^{n}I(X_i\leq t)$$
 
 
 \subsection{Comparison of true values and approximations}
-I use ```pnorm``` function to calculate the true values of distribution function at all the values of $t$ and then compute the approximations by Monte Carlo method described previously. Table 1 is generated and contains $t$, true values and approximations at different sample size n.
+I use `pnorm` function to calculate the true values of distribution function at all the values of $t$ and then compute the approximations by Monte Carlo method described previously. Table 1 is generated and contains $t$, true values and approximations at different sample size n.
 ```{r}
 t<- c(0.0, 0.67, 0.84, 1.28, 1.65, 2.32, 2.58, 3.09, 3.72)
 true_value<- pnorm(t, 0, 1)
@@ -58,44 +58,57 @@ tab<- cbind(t, true_value, apprx1, apprx2, apprx3)
 knitr::kable(tab, col.names = c("t", "True value", "Approx at n=10^2", "Approx at n=10^3", "Approx at n=10^4"), caption = "Comparison of true values and approximation")
 ```
 
-Further, I repeat the experiment 100 times and create box plots of bias at all $t$ (Figure 1).
+Further, I repeat the experiment 100 times and create box plots of bias at all $t$.
 
 ```{r}
 library(ggplot2)
-bias1<- NA
-bias2<- NA
-bias3<- NA
-bias_all<- NA
-for (j in 1:100){
-  for (i in 1:length(t)){
-     x<- rnorm(100, 0, 1)
-     bias1[i]<- sum(x<=t[i])/100- true_value[i]
-     y<- rnorm(1000, 0, 1)
-     bias2[i]<- sum(y<=t[i])/1000- true_value[i]
-     z<- rnorm(10000, 0, 1)
-     bias3[i]<- sum(z<=t[i])/10000- true_value[i]
+bias1<- matrix(NA, nrow = length(t), ncol = 100)
+bias2<- matrix(NA, nrow = length(t), ncol = 100)
+bias3<- matrix(NA, nrow = length(t), ncol = 100)
+for (i in 1:length(t)){
+  for (j in 1:100){
+    x<- rnorm(100, 0, 1)
+    bias1[i, j] <- sum(x<=t[i])/100- true_value[i]
+    y<- rnorm(1000, 0, 1)
+    bias2[i, j]<- sum(y<=t[i])/1000- true_value[i]
+    z<- rnorm(10000, 0, 1)
+    bias3[i, j]<- sum(z<=t[i])/10000- true_value[i]
   }
-  bias<-cbind(bias1, bias2, bias3)
-  bias_all<-rbind(bias_all, bias)
+  
 }
-bias_all<- as.data.frame(na.omit(bias_all))
-ggplot(stack(bias_all), aes(x = ind, y = values))+
+
+ggplot(stack(data.frame(t(bias1))), aes(x=ind, y=values))+
   geom_boxplot()+
-  scale_x_discrete(labels=c("n=10^2", "n=10^3", "n=10^4"), name="sample size")+
+  scale_x_discrete(labels=c(0.0, 0.67, 0.84, 1.28, 1.65, 2.32, 2.58, 3.09, 3.72), name="t")+
   scale_y_continuous(name="bias")+
-  ggtitle("Figure 1: bias at all t")+
+  ggtitle("Figure 1: bias at n=10^2")+
   theme(plot.title = element_text(hjust = 0.5))
+
+ggplot(stack(data.frame(t(bias2))), aes(x=ind, y=values))+
+  geom_boxplot()+
+  scale_x_discrete(labels=c(0.0, 0.67, 0.84, 1.28, 1.65, 2.32, 2.58, 3.09, 3.72), name="t")+
+  scale_y_continuous(name="bias")+
+  ggtitle("Figure 2: bias at n=10^3")+
+  theme(plot.title = element_text(hjust = 0.5))
+
+ggplot(stack(data.frame(t(bias3))), aes(x=ind, y=values))+
+  geom_boxplot()+
+  scale_x_discrete(labels=c(0.0, 0.67, 0.84, 1.28, 1.65, 2.32, 2.58, 3.09, 3.72), name="t")+
+  scale_y_continuous(name="bias")+
+  ggtitle("Figure 3: bias at n=10^4")+
+  theme(plot.title = element_text(hjust = 0.5))
+
 ```
 
 
 \subsection{Conclusion}
-According to Table 1, we can notice that when $n=10^4$ the approximations are most close to the true values. After repeating experiment 100 times, we can state the bias are more close to 0 with larger $n$ from Figue 1. Thus, this indicate that enlarging sample size will reduce the error of approximation. 
+According to Table 1, we can notice that when $n=10^4$ the approximations are most close to the true values. After repeating experiment 100 times, we can state the bias are more close to 0 with larger $n$ at each value of $t$ from Figue 1, 2 and 3. On the other hand, from each figure, we can find that with same sample size $n$ bias will be closer to 0 at larger value of $t$. Thus, this indicate that enlarging sample size will reduce the error of approximation and it will be more accurate if we approximate at larger $t$.
 
 # Exercise 2
-```.Machine$double.xmax``` is the largest normalized floating-point number. Normally, it is $1.797693e+308$.
+`.Machine$double.xmax` is the largest normalized floating-point number. Normally, it is $1.797693e+308$.
 
-``` .Machine$double.xmin``` is the smallest non-zero normalized floating-point number. Normally, it is $2.225074e-308$.
+` .Machine$double.xmin` is the smallest non-zero normalized floating-point number. Normally, it is $2.225074e-308$.
 
-```.Machine$double.eps``` is the smallest positive floating-point number x such that $1 + x != 1$. Normally, it is $2.220446e-16$.
+`.Machine$double.eps` is the smallest positive floating-point number x such that $1 + x != 1$. Normally, it is $2.220446e-16$.
 
-```.Machine$double.neg.eps``` is a small positive floating-point number x such that $1 - x != 1$. Normally, it is $1.110223e-16$.
+`.Machine$double.neg.eps` is a small positive floating-point number x such that $1 - x != 1$. Normally, it is $1.110223e-16$.
